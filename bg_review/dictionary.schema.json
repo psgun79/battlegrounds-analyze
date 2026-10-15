@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:battlegrounds-review:dictionary:1",
+  "title": "Battlegrounds Review Dictionary v1",
+  "type": "object",
+  "required": ["dictionaryVersion", "matchId", "cards", "effects", "templates", "effectTemplates", "entityStates", "snapshots", "observations", "actions", "actionGroups", "suppressedReorders", "result"],
+  "properties": {
+    "dictionaryVersion": {"const": 1},
+    "matchId": {"type": "string"},
+    "cards": {
+      "type": "object",
+      "propertyNames": {"pattern": "^C[0-9]+$"},
+      "additionalProperties": {
+        "type": "object",
+        "required": ["cardId", "name", "tier", "tribes"],
+        "properties": {
+          "cardId": {"type": ["string", "null"]},
+          "name": {"type": ["string", "null"]},
+          "tier": {"type": ["integer", "null"]},
+          "tribes": {"type": ["array", "null"]}
+        }
+      }
+    },
+    "effects": {"type": "object", "propertyNames": {"pattern": "^F[0-9]+$"}, "additionalProperties": {"type": "object"}},
+    "templates": {"type": "object", "propertyNames": {"pattern": "^X[0-9]+$"}, "additionalProperties": {"type": "object"}},
+    "effectTemplates": {
+      "type": "object",
+      "propertyNames": {"pattern": "^F[0-9]+$"},
+      "additionalProperties": {
+        "type": "object", "required": ["template", "overrides"],
+        "properties": {"template": {"type": "string", "pattern": "^X[0-9]+$"}, "overrides": {"type": "object"}}
+      }
+    },
+    "entityStates": {
+      "type": "object", "propertyNames": {"pattern": "^e[0-9]+v[0-9]+$"},
+      "additionalProperties": {"type": "object", "required": ["entityId", "card", "effects"], "properties": {
+        "entityId": {"type": "integer"}, "card": {"type": "string", "pattern": "^C[0-9]+$"},
+        "effects": {"type": "array", "items": {"type": "string", "pattern": "^F[0-9]+$"}}
+      }}
+    },
+    "snapshots": {"type": "object", "propertyNames": {"pattern": "^s[0-9]+$"}, "additionalProperties": {"type": "object"}},
+    "observations": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^s[0-9]+$"}},
+    "optionSets": {"type": "object"},
+    "actions": {"type": "object", "additionalProperties": {"type": "object"}},
+    "actionGroups": {"type": "array", "items": {"type": "array", "minItems": 1, "items": {"type": "string"}}},
+    "suppressedReorders": {"type": "array", "items": {"type": "string"}},
+    "result": {"type": "object", "required": ["status", "placement"]}
+  }
+}

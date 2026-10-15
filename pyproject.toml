@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "battlegrounds-review-logger"
+version = "0.4.2"
+description = "Read-only Power.log decision history for Battlegrounds post-game review"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "jsonschema>=4", "build>=1"]
+windows-build = ["pyinstaller==6.22.0; sys_platform == 'win32'", "pyinstaller-hooks-contrib==2026.8; sys_platform == 'win32'"]
+
+[project.scripts]
+bg-review = "bg_review.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["bg_review*"]
+
+[tool.setuptools.package-data]
+bg_review = ["*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:battlegrounds-review:schema:1",
+  "title": "Battlegrounds decision review v1",
+  "type": "object",
+  "required": ["schemaVersion", "loggerVersion", "match", "turns", "snapshots", "entityStates", "optionSets", "result", "quality"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "loggerVersion": {"type": "string"},
+    "match": {
+      "type": "object", "required": ["id", "startedAt", "localPlayerId", "hero", "build", "region", "mmrBefore", "mmrAfter"],
+      "properties": {"id": {"type": "string"}, "startedAt": {"type": "string"}, "localPlayerId": {"type": ["integer", "null"]}, "hero": {"$ref": "#/$defs/entityRef"}}
+    },
+    "turns": {"type": "array", "items": {"$ref": "#/$defs/turn"}},
+    "snapshots": {"type": "object", "additionalProperties": {"$ref": "#/$defs/state"}},
+    "entityStates": {"type": "object", "additionalProperties": {"$ref": "#/$defs/card"}},
+    "optionSets": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "object", "required": ["entity", "error"], "properties": {"entity": {"$ref": "#/$defs/entityRef"}, "error": {"type": "string"}}}}},
+    "result": {"type": "object", "required": ["status", "placement", "endedAt"], "properties": {"status": {"enum": ["in_progress", "incomplete", "completed"]}, "placement": {"type": ["integer", "null"], "minimum": 1, "maximum": 8}, "endedAt": {"type": ["string", "null"]}}},
+    "quality": {"type": "object", "required": ["warnings", "limitations"], "properties": {"warnings": {"type": "array", "items": {"type": "string"}}, "limitations": {"type": "array", "items": {"type": "string"}}}}
+  },
+  "$defs": {
+    "entityRef": {"type": ["string", "null"], "pattern": "^e[0-9]+v[0-9]+$"},
+    "stateRef": {"type": ["string", "null"], "pattern": "^s[0-9]+$"},
+    "refs": {"type": "array", "items": {"type": "string", "pattern": "^e[0-9]+v[0-9]+$"}},
+    "card": {
+      "type": "object", "required": ["entityId", "cardId", "name", "attack", "health", "golden", "rawTags", "enchantments"],
+      "properties": {
+        "entityId": {"type": "integer"}, "cardId": {"type": ["string", "null"]}, "name": {"type": ["string", "null"]},
+        "attack": {"type": ["integer", "null"]}, "health": {"type": ["integer", "null"]}, "golden": {"type": ["boolean", "null"]},
+        "rawTags": {"type": "object"}, "enchantments": {"type": "array", "items": {"$ref": "#/$defs/card"}}
+      }
+    },
+    "state": {
+      "type": "object", "required": ["id", "sequence", "timestamp", "sourceLine", "turn", "phase", "hp", "armor", "remainingGold", "tavernTier", "board", "hand", "shop", "opponentBoard", "choices"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stateRef"}, "sequence": {"type": "integer"}, "timestamp": {"type": "string"}, "sourceLine": {"type": "integer"},
+        "turn": {"type": "integer", "minimum": 0}, "phase": {"enum": ["HERO_SELECT", "RECRUIT", "COMBAT"]},
+        "hp": {"type": ["integer", "null"]}, "armor": {"type": ["integer", "null"]}, "remainingGold": {"type": ["integer", "null"]}, "tavernTier": {"type": ["integer", "null"]},
+        "board": {"$ref": "#/$defs/refs"}, "hand": {"$ref": "#/$defs/refs"}, "shop": {"$ref": "#/$defs/refs"}, "opponentBoard": {"$ref": "#/$defs/refs"},
+        "hero": {"$ref": "#/$defs/entityRef"}, "opponentHero": {"$ref": "#/$defs/entityRef"},
+        "choices": {"type": ["object", "null"]}
+      }
+    },
+    "event": {
+      "type": "object", "required": ["id", "sequence", "timestamp", "sourceLine", "turn", "phase", "action", "stateBefore", "stateAfter", "evidence"],
+      "properties": {"id": {"type": "string"}, "sequence": {"type": "integer"}, "timestamp": {"type": "string"}, "sourceLine": {"type": "integer"}, "turn": {"type": "integer"}, "phase": {"type": "string"}, "action": {"type": "string"}, "stateBefore": {"$ref": "#/$defs/stateRef"}, "stateAfter": {"$ref": "#/$defs/stateRef"}, "actor": {"$ref": "#/$defs/entityRef"}, "target": {"$ref": "#/$defs/entityRef"}, "evidence": {"type": "string"}}
+    },
+    "turn": {
+      "type": "object", "required": ["turn", "startState", "events", "shopSnapshots", "combat"],
+      "properties": {
+        "turn": {"type": "integer", "minimum": 0}, "startState": {"$ref": "#/$defs/stateRef"}, "events": {"type": "array", "items": {"$ref": "#/$defs/event"}},
+        "decisionSnapshots": {"type": "array", "items": {"type": "object", "required": ["state", "sequence", "reason"], "properties": {"state": {"$ref": "#/$defs/stateRef"}, "sequence": {"type": "integer"}, "reason": {"type": "string"}}}},
+        "shopSnapshots": {"type": "array", "items": {"type": "object", "required": ["state", "sequence", "reason", "decisionBoundary", "transient"], "properties": {"state": {"$ref": "#/$defs/stateRef"}, "sequence": {"type": "integer"}, "decisionBoundary": {"type": "boolean"}, "transient": {"type": "boolean"}}}},
+        "combat": {"type": ["object", "null"], "required": ["startState", "endState", "captureMethod", "result", "damageTaken", "damageDealt", "events"], "properties": {"startState": {"$ref": "#/$defs/stateRef"}, "endState": {"$ref": "#/$defs/stateRef"}, "captureMethod": {"type": "string"}, "result": {"enum": ["unknown", "win", "loss", "tie"]}, "damageTaken": {"type": ["integer", "null"], "minimum": 0}, "damageDealt": {"type": ["integer", "null"], "minimum": 0}, "events": {"type": "array"}}}
+      }
+    }
+  }
+}

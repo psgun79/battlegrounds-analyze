@@ -1,0 +1,64 @@
+name: Windows release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          architecture: x64
+      - name: Install build dependencies
+        run: python -m pip install ".[dev,windows-build]"
+      - name: Run regression tests
+        run: python -m pytest -q
+      - name: Build portable ZIP and checksum
+        run: python scripts/build_windows.py
+      - name: Test the extracted executable without Python on PATH
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem release-dist/*-windows-x64.zip
+          if (@($zip).Count -ne 1) { throw 'Expected one Windows ZIP.' }
+          python scripts/smoke_windows.py $zip.FullName
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-portable
+          path: release-dist/*
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-portable
+          path: release-dist
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" release-dist/* \
+            --verify-tag --title "Battlegrounds Review Logger $RELEASE_TAG" \
+            --notes-file docs/release-notes.md

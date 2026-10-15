@@ -1,0 +1,15 @@
+.research/
+.venv/
+__pycache__/
+*.egg-info/
+build/
+dist/
+output/
+private-validation/
+.pytest_cache/
+release-dist/
+.env
+.env.*
+!.env.example
+*.log
+!tests/fixtures/*.log

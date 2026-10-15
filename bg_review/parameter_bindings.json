@@ -1,0 +1,12 @@
+{
+  "bindingVersion": 1,
+  "cards": {
+    "BG32_MagicItem_901": {
+      "0": {"type": "race", "tag": "TAG_SCRIPT_DATA_NUM_1", "evidence": "CardDefs.Bacon.xml: the next {0} you buy; declared default 92 (NAGA), observed 20 (BEAST). Race.name_global maps BEAST to GLOBAL_RACE_PET."}
+    }
+  },
+  "sources": [
+    "https://github.com/HearthSim/hsdata/blob/bc742d57e0b057326b8cbf74fdf5f995310720f3/CardDefs.Bacon.xml",
+    "https://github.com/HearthSim/python-hearthstone/blob/master/hearthstone/enums.py"
+  ]
+}
