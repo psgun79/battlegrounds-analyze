@@ -7,6 +7,11 @@ from .cli import default_output, main as cli_main
 
 
 def main(argv=None):
+    # Frozen Python ignores PYTHONIOENCODING. Explicit UTF-8 also supports
+    # redirected output on Windows PCs whose system locale cannot encode Korean.
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     args = sys.argv[1:] if argv is None else argv
     if args:
         return cli_main(args)

@@ -11,7 +11,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install '.[dev,windows-build]'
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe scripts/build_windows.py
-.\.venv\Scripts\python.exe scripts/smoke_windows.py release-dist/battlegrounds-review-logger-0.4.2-windows-x64.zip
+.\.venv\Scripts\python.exe scripts/smoke_windows.py release-dist/battlegrounds-review-logger-0.4.3-windows-x64.zip
 ```
 
 `release-dist`에 버전별 ZIP과 `.zip.sha256`이 생성됩니다. 배포 ZIP은 빌드 결과와 명시된 문서·라이선스만 포함합니다. 작업 폴더, 개인 경기 로그, 카드 캐시, `.venv`는 복사하지 않습니다.
@@ -28,8 +28,8 @@ python -m venv .venv
 4. 버전과 같은 `v` 태그를 생성하여 push합니다.
 
 ```powershell
-git tag -a v0.4.2 -m 'Windows portable release 0.4.2'
-git push origin v0.4.2
+git tag -a v0.4.3 -m 'Windows portable release 0.4.3'
+git push origin v0.4.3
 ```
 
 `Windows release` 워크플로가 테스트 → Windows ZIP 빌드 → 압축 해제 후 실행 검증 → GitHub Release 게시를 수행합니다. 태그와 코드 버전이 다르면 게시 전에 실패합니다. 소스 저장소의 `dist`와 `release-dist`는 Git에서 제외하고, 실행 파일은 Release 첨부 파일로 배포합니다.

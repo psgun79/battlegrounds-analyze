@@ -45,7 +45,8 @@ def smoke(archive):
 
         assert "watch" in run("--help")
         version = json.loads((executable.parent / "build-info.json").read_text())["version"]
-        assert version in run(input="4\nq\n")
+        menu = run(input="4\nq\n")
+        assert version in menu and "전장 복기 로거" in menu
         config = base / "log.config"
         config.write_text("[Existing]\nValue=keep\n", encoding="utf-8")
         run("configure-logging", "--config", config)

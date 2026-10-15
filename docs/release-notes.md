@@ -1,6 +1,6 @@
 Python 설치 없이 실행하는 Windows x64용 전장 복기 로거입니다.
 
-1. 아래 Assets에서 `battlegrounds-review-logger-0.4.2-windows-x64.zip`을 다운로드합니다.
+1. 아래 Assets에서 `battlegrounds-review-logger-0.4.3-windows-x64.zip`을 다운로드합니다.
 2. ZIP 전체를 압축 해제하고 `bg-review.exe`를 더블클릭합니다.
 3. 처음이라면 메뉴 **2**로 게임 로그 설정 후 하스스톤을 재시작합니다.
 4. 메뉴 **1**로 기록을 시작합니다. 로그 위치는 Enter로 자동 검색합니다.
@@ -19,3 +19,4 @@ Python 설치 없이 실행하는 Windows x64용 전장 복기 로거입니다.
 Windows 경고가 나오면 배포 출처를 확인하세요. 보안 기능을 끄지 마세요.
 
 변경 사항: 더블클릭 메뉴, Windows 실행 파일 빌드, ZIP 실행 검증, 태그 기반 자동 배포 추가.
+영문 Windows에서 한글 메뉴와 경로를 출력할 때 발생하던 인코딩 오류를 수정했습니다.

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "battlegrounds-review-logger"
-version = "0.4.2"
+version = "0.4.3"
 description = "Read-only Power.log decision history for Battlegrounds post-game review"
 requires-python = ">=3.11"
 dependencies = []
